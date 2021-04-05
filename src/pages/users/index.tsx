@@ -24,7 +24,7 @@ export default function UserList(){
             justify="space-between"
             align="center"
           >
-            <Heading size="lg">Usuários</Heading>
+            <Heading size="lg" fontWeight="normal">Usuários</Heading>
 
             <Button
               as="a"
