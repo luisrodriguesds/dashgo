@@ -29,7 +29,6 @@ export default function Home() {
 
   return (
     <Flex w="100%" h="100vh" align="center" justify="center">
-      {console.log(errors)}
       <Flex
         as="form"
         w="100%"
