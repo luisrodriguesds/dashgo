@@ -10,6 +10,7 @@
   "dependencies": {
     "@chakra-ui/core": "^0.8.0",
     "@chakra-ui/react": "^1.4.2",
+    "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
     "@hookform/resolvers": "^2.0.0",
@@ -22,6 +23,7 @@
     "react-dom": "17.0.2",
     "react-hook-form": "^7.0.1",
     "react-icons": "^4.2.0",
+    "react-query": "^3.13.6",
     "yup": "^0.32.9"
   },
   "devDependencies": {
