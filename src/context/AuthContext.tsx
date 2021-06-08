@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { setCookie, parseCookies  } from "nookies";
 
@@ -78,4 +78,14 @@ export function AuthProvider({ children }: AuthProviderProps){
       {children}
     </AuthContext.Provider>
   )
+}
+
+export const useAuth = (): AuthContextData => {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+
+  return context;
 }
