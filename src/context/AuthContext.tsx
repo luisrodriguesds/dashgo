@@ -1,6 +1,7 @@
 import Router from 'next/router';
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '../services/api';
+import { setCookie, parseCookies  } from "nookies";
 
 type SignCredentials = {
   email: string;
@@ -29,18 +30,43 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthProvider({ children }: AuthProviderProps){
   const [user, setUser] = useState<User>({} as User);
   const isAuthenticate = !!user;
+
+  useEffect(() => {
+    const { 'dashgo.token': token } = parseCookies();
+
+    if (token) {
+      api.get('/me').then(response => {
+        const { email, permissions, roles } = response.data;
+        setUser({ email, permissions, roles })
+        console.log(response)
+      })
+    }
+  }, [])
+
   async function signIn({ email, password }: SignCredentials){
     try {
       const res = await api.post('/sessions', {
         email, password
       })
       
-      const { permissions, roles } = res.data
+      const { token, refreshToken, permissions, roles } = res.data
       setUser({
         email,
         permissions,
         roles
       })
+
+      setCookie(undefined, 'dashgo.token', token, {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/'
+      })
+
+      setCookie(undefined, 'dashgo.refreshToken', refreshToken,  {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/'
+      })
+
+      api.defaults.headers["Authorization"] = `Bearer ${token}`
       Router.push('/dashboard')
     } catch (error) {
       console.log(error)
