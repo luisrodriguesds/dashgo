@@ -65,7 +65,7 @@ const series = [
 
 export default function Dashboard(){
   useEffect(() => {
-    const res = api.get('/me').then(res => console.log(res.data, 'result'))
+    const res = api.get('/me').then(res => console.log(res.data, 'result')).catch((err) => console.log(err))
   }, [])
   return (
     <Flex direction="column" h="100vh">
