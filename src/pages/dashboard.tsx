@@ -2,8 +2,9 @@ import { Box, Flex, SimpleGrid, Text, theme } from "@chakra-ui/react";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
 import dynamic from "next/dynamic";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { api } from "../services/api";
 
 // Layzeload
 const Chart = dynamic(() => import('react-apexcharts'), {
@@ -63,11 +64,12 @@ const series = [
 ];
 
 export default function Dashboard(){
-  const { user } = useContext(AuthContext)
+  useEffect(() => {
+    const res = api.get('/me').then(res => console.log(res.data, 'result'))
+  }, [])
   return (
     <Flex direction="column" h="100vh">
       <Header />
-      {user?.email}
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
 

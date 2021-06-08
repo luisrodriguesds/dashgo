@@ -38,7 +38,6 @@ export function AuthProvider({ children }: AuthProviderProps){
       api.get('/me').then(response => {
         const { email, permissions, roles } = response.data;
         setUser({ email, permissions, roles })
-        console.log(response)
       })
     }
   }, [])
@@ -69,7 +68,7 @@ export function AuthProvider({ children }: AuthProviderProps){
       api.defaults.headers["Authorization"] = `Bearer ${token}`
       Router.push('/dashboard')
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
