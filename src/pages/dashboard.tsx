@@ -2,10 +2,10 @@ import { Box, Flex, SimpleGrid, Text, theme } from "@chakra-ui/react";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
 import dynamic from "next/dynamic";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { api } from "../services/api";
+import { useEffect } from "react";
+import { api } from "../services/apiClient";
 import { withSRRAuth } from "../hocs/withSSRAuth";
+import { setupAPIClient } from "../services/api";
 
 // Layzeload
 const Chart = dynamic(() => import('react-apexcharts'), {
@@ -107,6 +107,10 @@ export default function Dashboard(){
 }
 
 export const getServerSideProps = withSRRAuth(async (ctx) => {
+  // Para conseguir usar o cookie no contexto do servidor
+  const apiServer = setupAPIClient(ctx);
+  const response = await apiServer.get('/me');
+  console.log(response);
   return {
     props: {}
   }
