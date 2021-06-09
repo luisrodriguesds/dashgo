@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { api } from "../services/apiClient";
 import { withSRRAuth } from "../hocs/withSSRAuth";
 import { setupAPIClient } from "../services/api";
+import { Can } from "../components/Can";
 
 // Layzeload
 const Chart = dynamic(() => import('react-apexcharts'), {
@@ -65,42 +66,44 @@ const series = [
 ];
 
 export default function Dashboard(){
+
   useEffect(() => {
-    const res = api.get('/me').then(res => console.log(res.data, 'result')).catch((err) => console.log(err))
+    api.get('/me').then(res => console.log(res.data, 'result')).catch((err) => console.log(err))
   }, [])
   return (
     <Flex direction="column" h="100vh">
       <Header />
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
-
-        <SimpleGrid
-          flex="1"
-          gap="4"
-          minChildWidth="320px"
-          alignItems="flex-start"
-        >
-          <Box
-            p={["6","8"]}
-            bg="gray.800"
-            borderRadius={8}
-            pb="4"
+        <Can permissions={['metrics.list']}>
+          <SimpleGrid
+            flex="1"
+            gap="4"
+            minChildWidth="320px"
+            alignItems="flex-start"
           >
-            <Text fontSize="lg" mb="4">Inscritos da Semana</Text>
-            <Chart options={options} series={series} type="area" height={160} />
-          </Box>
+            <Box
+              p={["6","8"]}
+              bg="gray.800"
+              borderRadius={8}
+              pb="4"
+            >
+              <Text fontSize="lg" mb="4">Inscritos da Semana</Text>
+              <Chart options={options} series={series} type="area" height={160} />
+            </Box>
 
-          <Box
-            p={["6","8"]}
-            bg="gray.800"
-            borderRadius={8}
-            pb="4"
-          >
-            <Text fontSize="lg" mb="4">Taxa de abertura</Text>
-            <Chart options={options} series={series} type="area" height={160} />
-          </Box>
+            <Box
+              p={["6","8"]}
+              bg="gray.800"
+              borderRadius={8}
+              pb="4"
+            >
+              <Text fontSize="lg" mb="4">Taxa de abertura</Text>
+              <Chart options={options} series={series} type="area" height={160} />
+            </Box>
 
-        </SimpleGrid>
+          </SimpleGrid>
+        </Can>
       </Flex>
     </Flex>
   )

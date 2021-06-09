@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Input } from "../../components/Form/Input";
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
+import { withSRRAuth } from "../../hocs/withSSRAuth";
 
 export default function UserCreate(){
   return (
@@ -48,3 +49,11 @@ export default function UserCreate(){
     </Box>
   )
 }
+
+export const getServerSideProps = withSRRAuth(async (ctx) => {
+  return {
+    props: {}
+  }
+}, {
+  permissions: ['users.list'],
+})
