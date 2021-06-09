@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { api } from "../services/api";
+import { withSRRAuth } from "../hocs/withSSRAuth";
 
 // Layzeload
 const Chart = dynamic(() => import('react-apexcharts'), {
@@ -104,3 +105,9 @@ export default function Dashboard(){
     </Flex>
   )
 }
+
+export const getServerSideProps = withSRRAuth(async (ctx) => {
+  return {
+    props: {}
+  }
+})
