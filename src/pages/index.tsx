@@ -4,9 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
+import { AuthContext } from "../contexts/AuthContext";
 import { withSRRGuest } from "../hocs/withSSRGuest";
 
 type SignInFormData = {

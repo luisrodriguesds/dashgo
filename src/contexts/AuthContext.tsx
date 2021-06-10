@@ -15,7 +15,8 @@ type User = {
 }
 
 type AuthContextData = {
-  signIn(credentials): Promise<void>
+  signIn(credentials): Promise<void>;
+  signOut: () => void;
   isAuthenticate: boolean;
   user: User
 }
@@ -24,17 +25,49 @@ type AuthProviderProps = {
   children: ReactNode
 }
 
+export const AuthContext = createContext({} as AuthContextData);
+
+let authChannel: BroadcastChannel;
+
 export function signOut(){
   destroyCookie(undefined, 'dashgo.token');
   destroyCookie(undefined, 'dashgo.refreshToken');
+
+  authChannel.postMessage('signOut');
+
   Router.push('/');
 } 
 
-export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps){
   const [user, setUser] = useState<User>({} as User);
   const isAuthenticate = !!user;
+
+  useEffect(() => {
+    authChannel = new BroadcastChannel('auth');
+    authChannel.onmessage = (message) => {
+      console.log(message.data)
+
+      switch (message.data) {
+        case 'signOut':
+          // Checkar para não entrar em loop
+          if (Router.pathname !== '/') {
+            signOut();
+            console.log("sair");
+          }
+          break;
+        case 'signIn':
+          // if (Router.pathname === '/') {
+          //   console.log("entrar");
+
+          //   Router.push('/dashboard');
+          // }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const { 'dashgo.token': token } = parseCookies();
@@ -73,14 +106,20 @@ export function AuthProvider({ children }: AuthProviderProps){
       })
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`
-      Router.push('/dashboard')
+
+      
+      Router.push('/dashboard');
+
+      setTimeout(() => {
+        authChannel.postMessage('signIn');
+      }, 1000)
     } catch (error) {
       console.log(error);
     }
   }
 
   return (
-    <AuthContext.Provider value={{isAuthenticate, signIn, user}}>
+    <AuthContext.Provider value={{isAuthenticate, signIn, user, signOut}}>
       {children}
     </AuthContext.Provider>
   )
